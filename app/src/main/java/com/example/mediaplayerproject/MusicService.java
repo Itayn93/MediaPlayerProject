@@ -21,10 +21,11 @@ import java.util.ArrayList;
 public class MusicService extends Service implements MediaPlayer.OnPreparedListener,MediaPlayer.OnCompletionListener{
 
     MediaPlayer mediaPlayer = new MediaPlayer();
-    ArrayList<String> songs;
+    ArrayList<Song> songs;
     int currentlyPlaying = 0;
 
     final int NOTIF_ID = 1;
+    final String passSongList = "SONG_LIST";
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -92,9 +93,9 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         switch (command){
             case "new_instance":
                 if(!mediaPlayer.isPlaying()) {
-                    songs = intent.getStringArrayListExtra("list");
+                    songs = (ArrayList<Song>) intent.getSerializableExtra(passSongList);
                     try {
-                        mediaPlayer.setDataSource(songs.get(currentlyPlaying));
+                        mediaPlayer.setDataSource(songs.get(currentlyPlaying).getLink());//.get(currentlyPlaying));
                         mediaPlayer.prepareAsync();
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -149,7 +150,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         }
         mediaPlayer.reset();
         try {
-            mediaPlayer.setDataSource(songs.get(currentlyPlaying));
+            mediaPlayer.setDataSource(songs.get(currentlyPlaying).getLink());
             mediaPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();

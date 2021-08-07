@@ -28,6 +28,8 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -41,7 +43,7 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
     Bitmap bitmap;
     File file;
 
-    //boolean allDetails = false ;
+    boolean byCamera; ;
 
     String songName;
     String songArtist = "user";
@@ -88,11 +90,6 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
         songsList = (ArrayList<Song>) intent.getSerializableExtra(passSongList);
 
 
-
-
-
-
-
         addPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +99,7 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
                             @Override
                             // upload picture with camera
                             public void onClick(DialogInterface dialog, int which) {
+                                byCamera = true;
                                 Log.d("alert: ", "onclick, upload picture with camera");
                                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -132,7 +130,10 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
                             @Override
                             // upload picture with gallery
                             public void onClick(DialogInterface dialog, int which) {
-
+                                byCamera = false;
+                                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                                photoPickerIntent.setType("image/*");
+                                startActivityForResult(photoPickerIntent, 1);
 
                             }
                         })
@@ -183,16 +184,34 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (byCamera){
+            if(requestCode == 1 && resultCode == RESULT_OK){
+                // bitmap = (Bitmap) data.getExtras().get("data");
+                bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                Uri uri = getImageUri(getApplicationContext(),bitmap);
+                songPicture.setImageBitmap(bitmap);
+                songPicLink = uri.toString();
+            }
+        }
+        else { // by Gallery
+            if (resultCode == RESULT_OK) {
+                try {
+                    final Uri imageUri = data.getData();
+                    final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    songPicture.setImageBitmap(selectedImage);
+                    songPicLink = imageUri.toString();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    Toast.makeText(AddSongActivity.this, "Something went wrong", Toast.LENGTH_LONG).show();
+                }
 
-        if(requestCode == 1 && resultCode == RESULT_OK){
-           // bitmap = (Bitmap) data.getExtras().get("data");
-            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-            Uri uri = getImageUri(getApplicationContext(),bitmap);
-            songPicture.setImageBitmap(bitmap);
-            songPicLink = uri.toString();
-
+            }else {
+                Toast.makeText(AddSongActivity.this, "You haven't picked Image",Toast.LENGTH_LONG).show();
+            }
         }
     }
+
 
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {

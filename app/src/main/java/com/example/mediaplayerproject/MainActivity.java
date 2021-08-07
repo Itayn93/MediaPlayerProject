@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements DialogInterface.O
         songsList.add(song2);
         songsList.add(song3);
         //////////////////////////////////////////////////////////////////////////////////////////////
-        songsList.add(song1);
+       /* songsList.add(song1);
         songsList.add(song2);
         songsList.add(song3);
         songsList.add(song1);
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements DialogInterface.O
         songsList.add(song3);
         songsList.add(song1);
         songsList.add(song2);
-        songsList.add(song3);
+        songsList.add(song3);*/
         //////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -78,10 +78,10 @@ public class MainActivity extends AppCompatActivity implements DialogInterface.O
             @Override
             public void onClick(View v) {
                 /** start playing and move to song list recycler view*/
-             /*Intent intent = new Intent(SongsListActivity.this,MusicService.class);
-             intent.putExtra("list",list);
+             Intent intent = new Intent(MainActivity.this,MusicService.class);
+             intent.putExtra(passSongList,(Serializable)songsList);
              intent.putExtra("command","new_instance");
-             startService(intent);*/
+             startService(intent);
             }
         });
 
