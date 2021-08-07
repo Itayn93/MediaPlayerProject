@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
+    android:orientation="vertical"
+    android:padding="30dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="Press play to start the music"
+        android:gravity="center"
+        android:textSize="25dp"/>
+
+    <ImageButton
+        android:id="@+id/imageButtonPlay"
+        android:layout_width="match_parent"
+        android:layout_height="182dp"
+        android:layout_marginTop="150dp"
+        app:srcCompat="@drawable/ic_baseline_play_circle_filled_24"
+        android:scaleType="fitCenter"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonAddSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:layout_marginRight="15dp"
+            android:text="Add Song" />
+
+        <Button
+            android:id="@+id/buttonViewList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="view list" />
+    </LinearLayout>
+</LinearLayout>
