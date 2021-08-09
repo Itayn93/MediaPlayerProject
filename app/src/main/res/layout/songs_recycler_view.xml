@@ -24,7 +24,8 @@
             <ImageView
                 android:id="@+id/imageViewSongPic"
                 android:layout_width="93dp"
-                android:layout_height="93dp" />
+                android:layout_height="93dp"
+                android:scaleType="fitXY"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,13 +51,7 @@
                     android:text="Artist"
                     android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/textViewSongDuration"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Duration"
-                    android:textSize="14sp" />
+
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

@@ -9,14 +9,14 @@ public class Song implements Serializable {
 
     private String name;
     private String artist;
-    private String Duration;
+    //private String Duration;
     private String link;
     private String pictureLink;
 
-    public Song(String name, String artist, String duration, String link, String pictureLink) {
+    public Song(String name, String artist, String link, String pictureLink) {
         this.name = name;
         this.artist = artist;
-        Duration = duration;
+        //Duration = duration;
         this.link = link;
         this.pictureLink = pictureLink;
     }
@@ -37,13 +37,13 @@ public class Song implements Serializable {
         this.artist = artist;
     }
 
-    public String getDuration() {
+    /*public String getDuration() {
         return Duration;
-    }
+    }*/
 
-    public void setDuration(String duration) {
+    /*public void setDuration(String duration) {
         Duration = duration;
-    }
+    }*/
 
     public String getLink() {
         return link;

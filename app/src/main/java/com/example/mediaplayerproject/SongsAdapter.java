@@ -45,7 +45,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHol
     }
 
     public SongsAdapter(List<Song> songsList) {
-        Log.d("Lifecycle: ", "SongsAdapter CONSTRUCTOR");
+        //Log.d("Lifecycle: ", "SongsAdapter CONSTRUCTOR");
         this.songsList = songsList;
     }
 
@@ -64,7 +64,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHol
             cardView = itemView.findViewById(R.id.cardViewAppCard);
             songName = itemView.findViewById(R.id.textViewSongName);
             songArtist = itemView.findViewById(R.id.textViewSongArtist);
-            songDuration = itemView.findViewById(R.id.textViewSongDuration);
+            //songDuration = itemView.findViewById(R.id.textViewSongDuration);
             songPicture = itemView.findViewById(R.id.imageViewSongPic);
 
             //gestureDetector = new GestureDetector(itemView.getContext(),this);
@@ -200,7 +200,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHol
         Song song = songsList.get(position);
         holder.songName.setText(song.getName());
         holder.songArtist.setText(song.getArtist());
-        holder.songDuration.setText(song.getDuration());
+        //holder.songDuration.setText(song.getDuration());
         Glide.with(holder.songPicture.getContext()).load(song.getPictureLink()).fitCenter().into(holder.songPicture);
         //holder.songPicture.setImageResource(song.getPictureLink());
 

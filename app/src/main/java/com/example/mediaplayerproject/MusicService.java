@@ -9,7 +9,10 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.IBinder;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -23,6 +26,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     MediaPlayer mediaPlayer = new MediaPlayer();
     ArrayList<Song> songs;
     int currentlyPlaying = 0;
+
 
     final int NOTIF_ID = 1;
     final String passSongList = "SONG_LIST";
@@ -38,6 +42,8 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.reset();
+
+
 
         NotificationManager manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
@@ -77,9 +83,17 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         PendingIntent closePendingIntent = PendingIntent.getService(this,4,closeIntent,PendingIntent.FLAG_UPDATE_CURRENT);
         remoteViews.setOnClickPendingIntent(R.id.close_btn,closePendingIntent);
 
+
+        /*Intent songNameIntent = new Intent(this,MusicService.class);
+        songNameIntent.putExtra("command","close");
+        PendingIntent songNamePendingIntent = PendingIntent.getService(this,5,closeIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        remoteViews.setOnClickPendingIntent(R.id.song_title,songNamePendingIntent);*/
+
+
         builder.setCustomContentView(remoteViews);
 
         builder.setSmallIcon(android.R.drawable.ic_media_play);
+
 
         startForeground(NOTIF_ID,builder.build());
 
@@ -89,11 +103,14 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         String command = intent.getStringExtra("command");
+        //String songTitle = intent.getStringExtra("song_title");
 
         switch (command){
             case "new_instance":
                 if(!mediaPlayer.isPlaying()) {
                     songs = (ArrayList<Song>) intent.getSerializableExtra(passSongList);
+                    //songTitle = songs.get(currentlyPlaying).getName();
+
                     try {
                         mediaPlayer.setDataSource(songs.get(currentlyPlaying).getLink());//.get(currentlyPlaying));
                         mediaPlayer.prepareAsync();

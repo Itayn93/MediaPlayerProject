@@ -1,6 +1,7 @@
 package com.example.mediaplayerproject;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.Serializable;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SongDetailsFragment#newInstance} factory method to
@@ -24,7 +27,7 @@ public class SongDetailsFragment extends Fragment {
 
     final String songNameToFragmentKey = "SONG_NAME";
     final String songArtistToFragmentKey = "SONG_ARTIST";
-    final String songDurationToFragmentKey = "SONG_DURATION";
+    //final String songDurationToFragmentKey = "SONG_DURATION";
     final String songPicToFragmentKey = "SONG_PICTURE";
 
 
@@ -33,12 +36,12 @@ public class SongDetailsFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String ARG_PARAM3 = "param3";
-    private static final String ARG_PARAM4 = "param4";
+    //private static final String ARG_PARAM4 = "param4";
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
     private String mParam3;
-    private String mParam4;
+    //private String mParam4;
 
     public SongDetailsFragment() {
         // Required empty public constructor
@@ -53,14 +56,14 @@ public class SongDetailsFragment extends Fragment {
      * @return A new instance of fragment SongDetailsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SongDetailsFragment newInstance(String param1, String param2, String param3,String param4) {
+    public static SongDetailsFragment newInstance(String param1, String param2,String param3) {
         Log.d("Lifecycle: ", "SongDetailsFragment newInstance");
         SongDetailsFragment fragment = new SongDetailsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         args.putString(ARG_PARAM3, param3);
-        args.putString(ARG_PARAM4, param4);
+        //args.putString(ARG_PARAM4, param4);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,7 +76,7 @@ public class SongDetailsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
             mParam3 = getArguments().getString(ARG_PARAM3);
-            mParam4 = getArguments().getString(ARG_PARAM4);
+            //mParam4 = getArguments().getString(ARG_PARAM4);
 
         }
     }
@@ -88,15 +91,26 @@ public class SongDetailsFragment extends Fragment {
 
         TextView songName = rootView.findViewById(R.id.songNameFragment);
         TextView songArtist = rootView.findViewById(R.id.songArtistFragment);
-        TextView songDuration = rootView.findViewById(R.id.songDurationFragment);
+        //TextView songDuration = rootView.findViewById(R.id.songDurationFragment);
         ImageView songPicture = rootView.findViewById(R.id.songPicFragment);
 
         songName.setText(getArguments().getString(songNameToFragmentKey));
         songArtist.setText(getArguments().getString(songArtistToFragmentKey));
-        songDuration.setText(getArguments().getString(songDurationToFragmentKey));
+        //songDuration.setText(getArguments().getString(songDurationToFragmentKey));
         Glide.with(songPicture.getContext()).load(getArguments().getString(songPicToFragmentKey)).fitCenter().placeholder(rootView.getId()).into(songPicture);
 
 
         return rootView;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("Lifecycle: ", "SongDetailsFragment onDestroy  ");
+       /* Intent songsListIntent = new Intent(, SongsListActivity.class);
+
+        startActivity(songsListIntent);*/
+    }
+
+
 }

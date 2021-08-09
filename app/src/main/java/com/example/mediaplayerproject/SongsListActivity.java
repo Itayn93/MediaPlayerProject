@@ -17,6 +17,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +38,7 @@ public class SongsListActivity extends AppCompatActivity implements DialogInterf
 
     final String songNameToFragmentKey = "SONG_NAME";
     final String songArtistToFragmentKey = "SONG_ARTIST";
-    final String songDurationToFragmentKey = "SONG_DURATION";
+    //final String songDurationToFragmentKey = "SONG_DURATION";
     final String songPicToFragmentKey = "SONG_PICTURE";
 
     //ItemTouchHelper.SimpleCallback itemTouchHelperCallback;
@@ -52,6 +57,8 @@ public class SongsListActivity extends AppCompatActivity implements DialogInterf
 
         fragmentManager = getSupportFragmentManager();
 
+       /* Intent musicServiceIntent = new Intent(this,MusicService.class);
+        isMy*/
        /* songsList.add(song1);
         songsList.add(song2);
         songsList.add(song3);
@@ -81,25 +88,25 @@ public class SongsListActivity extends AppCompatActivity implements DialogInterf
 
                 /** move to song elaborated version view*/
 
-                Log.d("Lifecycle: ", "SongsListActivity onSongClicked");
+                //Log.d("Lifecycle: ", "SongsListActivity onSongClicked");
 
 
                 String songNameToFragment = songsList.get(position).getName();
                 String songArtistToFragment = songsList.get(position).getArtist();
-                String songDurationToFragment = songsList.get(position).getDuration();
+                //String songDurationToFragment = songsList.get(position).getDuration();
                 String songPictureToFragment = songsList.get(position).getPictureLink();
 
                 //SongDetailsFragment songDetailsFragment = SongDetailsFragment.newInstance(songNameToFragment,songArtistToFragment,songDurationToFragment);
                 Bundle bundle = new Bundle();
                 bundle.putString(songNameToFragmentKey, songNameToFragment);
                 bundle.putString(songArtistToFragmentKey, songArtistToFragment);
-                bundle.putString(songDurationToFragmentKey, songDurationToFragment);
+                //bundle.putString(songDurationToFragmentKey, songDurationToFragment);
                 bundle.putString(songPicToFragmentKey, songPictureToFragment);
 
                 SongDetailsFragment songDetailsFragment = new SongDetailsFragment();
                 songDetailsFragment.setArguments(bundle);
 
-                Log.d("Lifecycle: ", "SongsListActivity newInstance");
+                //Log.d("Lifecycle: ", "SongsListActivity newInstance");
                 FragmentManager fragmentManager = getSupportFragmentManager();
 
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -119,6 +126,18 @@ public class SongsListActivity extends AppCompatActivity implements DialogInterf
                 Collections.swap(songsList, fromPosition, toPosition);
                 recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
 
+                try {
+                    FileOutputStream fos = openFileOutput("songsList",MODE_PRIVATE);
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                    oos.writeObject(songsList);
+                    oos.close();
+                    Log.d("Lifecycle: ", "AddSongActivity addToPlaylistButton Clicked songsList size = " + songsList.size());
+
+                }catch (FileNotFoundException e){
+                    e.printStackTrace();
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 return true;// true if moved, false otherwise
             }
@@ -132,9 +151,22 @@ public class SongsListActivity extends AppCompatActivity implements DialogInterf
                             @Override
                             // yes delete the song
                             public void onClick(DialogInterface dialog, int which) {
-                                Log.d("alert: ", "onclick, Yes");
+                                //Log.d("alert: ", "onclick, Yes");
                                 songsList.remove(viewHolder.getAdapterPosition());
                                 songsAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+
+                                try {
+                                    FileOutputStream fos = openFileOutput("songsList",MODE_PRIVATE);
+                                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+                                    oos.writeObject(songsList);
+                                    oos.close();
+                                    Log.d("Lifecycle: ", "AddSongActivity addToPlaylistButton Clicked songsList size = " + songsList.size());
+
+                                }catch (FileNotFoundException e){
+                                    e.printStackTrace();
+                                }catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                                 Toast.makeText(SongsListActivity.this, "Song deleted", Toast.LENGTH_LONG).show();
                             }
                         })
@@ -165,7 +197,7 @@ public class SongsListActivity extends AppCompatActivity implements DialogInterf
 
 
         recyclerView.setAdapter(songsAdapter);
-        Log.d("Lifecycle: ", "SET ADAPTER RECYCLERVIEW");
+        //Log.d("Lifecycle: ", "SET ADAPTER RECYCLERVIEW");
 
        /* Intent intent = new Intent(SongsListActivity.this,MusicService.class);
         intent.putExtra("list",list);
@@ -180,4 +212,38 @@ public class SongsListActivity extends AppCompatActivity implements DialogInterf
         // Log.d("alert: ", "onclick, outside");
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("Lifecycle: ", "SongsListActivity onPause  ");
+    }
+
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("Lifecycle: ", "SongsListActivity onStop  ");
+     /*   Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(mainActivityIntent);*/
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("Lifecycle: ", "SongsListActivity onDestroy  ");
+       /* Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(mainActivityIntent);*/
+
+
+    }
+
+   /* @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d("Lifecycle: ", "SongsListActivity onBackPressed  ");
+        Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(mainActivityIntent);
+    }*/
 }

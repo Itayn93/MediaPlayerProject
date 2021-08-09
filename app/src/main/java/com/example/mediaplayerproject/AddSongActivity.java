@@ -26,10 +26,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -39,20 +44,20 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
 
     final String passSongList = "SONG_LIST";
 
-    final int CAMERA_REQUEST = 1;
+    //final int CAMERA_REQUEST = 1;
     Bitmap bitmap;
     File file;
 
     boolean byCamera; ;
 
     String songName;
-    String songArtist = "user";
-    String songDuration = "00:00";
+    String songArtist;
+    //String songDuration = "00:00";
     String songLink;
     String songPicLink = "";
 
     EditText songNameET;
-    //EditText songArtistET;
+    EditText songArtistET;
     //EditText songDurationET;
     EditText songLinkET;
 
@@ -64,7 +69,7 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("alert: ", "onCreate AddSongActivity");
+        Log.d("Lifecycle: ", "AddSongActivity onCreate ");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_song);
 
@@ -72,7 +77,7 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
         StrictMode.setVmPolicy(builder.build());
 
         songNameET = findViewById(R.id.editTextSongName);
-        //songArtistET = findViewById(R.id.editTextSongArtist);
+        songArtistET = findViewById(R.id.editTextSongArtist);
         //songDurationET = findViewById(R.id.editTextSongDuration);
         songLinkET = findViewById(R.id.editTextSongLink);
         addPictureButton = findViewById(R.id.buttonAddPicture);
@@ -146,11 +151,34 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
             @Override
             public void onClick(View v) {
                 if ((!songName.matches("")) && (!songLink.matches("")) && (!songPicLink.matches(""))){
-                    Song newSong = new Song(songName,songArtist,songDuration,songLink,songPicLink);
+                    Song newSong = new Song(songName,songArtist,songLink,songPicLink);
                     songsList.add(newSong);
+                   /* Intent musicServiceIntent = new Intent(AddSongActivity.this,MusicService.class);
+                    musicServiceIntent.putExtra(passSongList,(Serializable)songsList);*/
+
+                    try {
+                        FileOutputStream fos = openFileOutput("songsList",MODE_PRIVATE);
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        oos.writeObject(songsList);
+                        oos.close();
+                        Log.d("Lifecycle: ", "AddSongActivity addToPlaylistButton Clicked songsList size = " + songsList.size());
+
+                    }catch (FileNotFoundException e){
+                        e.printStackTrace();
+                    }catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+
                     Intent songsListIntent = new Intent(getApplicationContext(), SongsListActivity.class);
                     songsListIntent.putExtra(passSongList,(Serializable)songsList);
                     startActivity(songsListIntent);
+
+                    /*Intent musicServiceIntent = new Intent(AddSongActivity.this,MusicService.class);
+                    musicServiceIntent.putExtra(passSongList,(Serializable)songsList);
+                    musicServiceIntent.putExtra("command","new_instance");
+                    //intent.putExtra("song_title","new_instance");
+                    startService(musicServiceIntent);*/
                 }
                 else{
                     Toast.makeText(AddSongActivity.this, "Please fill all details", Toast.LENGTH_LONG).show();
@@ -166,17 +194,17 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("alert: ", "onStart AddSongActivity");
+        Log.d("Lifecycle: ", "AddSongActivity onStart ");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Log.d("alert: ", "onResume AddSongActivity");
+        Log.d("Lifecycle: ", "AddSongActivity onResume ");
 
         songName = songNameET.getText().toString();
-        //songArtist = songArtistET.getText().toString();
+        songArtist = songArtistET.getText().toString();
         //songDuration = songDurationET.getText().toString();
         songLink = songLinkET.getText().toString();
     }
@@ -189,7 +217,9 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
                 // bitmap = (Bitmap) data.getExtras().get("data");
                 bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 Uri uri = getImageUri(getApplicationContext(),bitmap);
-                songPicture.setImageBitmap(bitmap);
+                Glide.with(this).load(uri).fitCenter().into(songPicture);
+                //Glide.with(this).load(getArguments().getString(songPicToFragmentKey)).fitCenter().placeholder(rootView.getId()).into(songPicture);
+                //songPicture.setImageBitmap(bitmap);
                 songPicLink = uri.toString();
             }
         }
@@ -199,7 +229,8 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
                     final Uri imageUri = data.getData();
                     final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                    songPicture.setImageBitmap(selectedImage);
+                    Glide.with(this).load(imageUri).fitCenter().into(songPicture);
+                    //songPicture.setImageBitmap(selectedImage);
                     songPicLink = imageUri.toString();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -210,6 +241,9 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
                 Toast.makeText(AddSongActivity.this, "You haven't picked Image",Toast.LENGTH_LONG).show();
             }
         }
+
+
+
     }
 
 
@@ -226,5 +260,44 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
     @Override
     public void onClick(DialogInterface dialog, int which) {
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("Lifecycle: ", "AddSongActivity onPause ");
+/*
+        try {
+            FileOutputStream fos = openFileOutput("songsList",MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(songsList);
+            oos.close();
+
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }*/
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("Lifecycle: ", "AddSongActivity onStop ");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("Lifecycle: ", "AddSongActivity onDestroy ");
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d("Lifecycle: ", "AddSongActivity onBackPressed ");
+        Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(mainActivityIntent);
     }
 }

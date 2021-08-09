@@ -14,39 +14,35 @@
         android:background="@android:color/darker_gray">
 
         <ImageView
-            android:layout_width="250dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="100dp"
-            android:layout_weight="1"
-            android:layout_marginBottom="200dp"
+            android:id="@+id/songPicFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/songPicFragment" />
+            android:layout_weight="1"
+            android:layout_marginTop="100dp"
+            android:layout_marginBottom="200dp"
+            android:scaleType="fitXY" />
 
 
-        <TextView
-            android:id="@+id/songNameFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="25sp"
 
-            android:text="Name" />
 
-        <TextView
-            android:id="@+id/songArtistFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="25sp"
-            android:text="Artist" />
+            <TextView
+                android:id="@+id/songNameFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Name"
+                android:textSize="25sp" />
 
-        <TextView
-            android:id="@+id/songDurationFragment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textSize="25sp"
-            android:text="Duration" />
+            <TextView
+                android:id="@+id/songArtistFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Artist"
+                android:textSize="25sp" />
+
+
 
     </LinearLayout>
 
