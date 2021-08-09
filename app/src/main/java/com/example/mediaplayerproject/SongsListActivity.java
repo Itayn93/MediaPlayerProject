@@ -126,6 +126,7 @@ public class SongsListActivity extends AppCompatActivity implements DialogInterf
                 Collections.swap(songsList, fromPosition, toPosition);
                 recyclerView.getAdapter().notifyItemMoved(fromPosition, toPosition);
 
+
                 try {
                     FileOutputStream fos = openFileOutput("songsList",MODE_PRIVATE);
                     ObjectOutputStream oos = new ObjectOutputStream(fos);

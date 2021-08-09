@@ -93,19 +93,6 @@ public class MainActivity extends AppCompatActivity implements DialogInterface.O
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        //////////////////////////////////////////////////////////////////////////////////////////////
-       /* songsList.add(song1);
-        songsList.add(song2);
-        songsList.add(song3);
-        songsList.add(song1);
-        songsList.add(song2);
-        songsList.add(song3);
-        songsList.add(song1);
-        songsList.add(song2);
-        songsList.add(song3);*/
-        //////////////////////////////////////////////////////////////////////////////////////////////
-
-
     }
 
     @Override
@@ -117,18 +104,7 @@ public class MainActivity extends AppCompatActivity implements DialogInterface.O
             public void onClick(View v) {
                 /** start playing and move to song list recycler view*/
                 Log.d("Lifecycle: ", "MainActivity playButton Clicked");
-               /* try {
-                    FileInputStream fis = openFileInput("songsList");
-                    ObjectInputStream ois = new ObjectInputStream(fis);
-                    songsList = (ArrayList<Song>)ois.readObject();
-                    Log.d("Lifecycle: ", "MainActivity playButton Clicked songsList size = " + songsList.size());
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }*/
+
              Intent intent = new Intent(MainActivity.this,MusicService.class);
              intent.putExtra(passSongList,(Serializable)songsList);
              intent.putExtra("command","new_instance");
@@ -151,18 +127,6 @@ public class MainActivity extends AppCompatActivity implements DialogInterface.O
         viewSongsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* try {
-                    FileInputStream fis = openFileInput("songsList");
-                    ObjectInputStream ois = new ObjectInputStream(fis);
-                    songsList = (ArrayList<Song>)ois.readObject();
-                    Log.d("Lifecycle: ", "MainActivity viewSongsList Clicked songsList size = " + songsList.size());
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }*/
                 Intent songsListIntent = new Intent(getApplicationContext(), SongsListActivity.class);
                 songsListIntent.putExtra(passSongList,(Serializable)songsList);
                 startActivity(songsListIntent);
@@ -184,17 +148,6 @@ public class MainActivity extends AppCompatActivity implements DialogInterface.O
         super.onPause();
         Log.d("Lifecycle: ", "MainActivity onPause");
 
-        /*try {
-            FileInputStream fis = openFileInput("songsList");
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            songsList = (ArrayList<Song>)ois.readObject();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }*/
     }
 
     @Override

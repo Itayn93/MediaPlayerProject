@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -50,10 +52,10 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
 
     boolean byCamera; ;
 
-    String songName;
-    String songArtist;
+    String songName= "";
+    String songArtist= "";
     //String songDuration = "00:00";
-    String songLink;
+    String songLink= "";
     String songPicLink = "";
 
     EditText songNameET;
@@ -83,6 +85,7 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
         addPictureButton = findViewById(R.id.buttonAddPicture);
         addToPlaylistButton = findViewById(R.id.buttonAddToPlaylist);
         songPicture = findViewById(R.id.songPicture);
+
 
         /*songName = songNameET.getText().toString();
         //songArtist = songArtistET.getText().toString();
@@ -150,8 +153,9 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
         addToPlaylistButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((!songName.matches("")) && (!songLink.matches("")) && (!songPicLink.matches(""))){
+                if ((!songName.matches("")) && (!songArtist.matches("")) &&  (!songLink.matches("")) && (!songPicLink.matches(""))){
                     Song newSong = new Song(songName,songArtist,songLink,songPicLink);
+
                     songsList.add(newSong);
                    /* Intent musicServiceIntent = new Intent(AddSongActivity.this,MusicService.class);
                     musicServiceIntent.putExtra(passSongList,(Serializable)songsList);*/
@@ -203,10 +207,59 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
 
         Log.d("Lifecycle: ", "AddSongActivity onResume ");
 
-        songName = songNameET.getText().toString();
-        songArtist = songArtistET.getText().toString();
+        songNameET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                songName = songNameET.getText().toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        songArtistET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                songArtist = songArtistET.getText().toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         //songDuration = songDurationET.getText().toString();
-        songLink = songLinkET.getText().toString();
+
+        songLinkET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                songLink = songLinkET.getText().toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
     }
 
     @Override
