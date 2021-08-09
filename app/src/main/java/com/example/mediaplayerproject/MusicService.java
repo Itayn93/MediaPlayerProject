@@ -1,6 +1,7 @@
 package com.example.mediaplayerproject;
 
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -30,6 +31,9 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     final int NOTIF_ID = 1;
     final String passSongList = "SONG_LIST";
+    RemoteViews remoteViews;// new RemoteViews(getPackageName(),R.layout.music_notif);
+    NotificationCompat.Builder builder;
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -43,7 +47,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.reset();
 
-        //songs = (ArrayList<Song>) intent.getSerializableExtra(passSongList);
 
         NotificationManager manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
@@ -54,9 +57,9 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         manager.createNotificationChannel(channel);
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,channelId);
+        builder = new NotificationCompat.Builder(this,channelId);
 
-        RemoteViews remoteViews = new RemoteViews(getPackageName(),R.layout.music_notif);
+        remoteViews = new RemoteViews(getPackageName(),R.layout.music_notif);
 
 
         Intent playIntent = new Intent(this,MusicService.class);
@@ -85,11 +88,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         remoteViews.setOnClickPendingIntent(R.id.close_btn,closePendingIntent);
 
 
-        /*Intent songNameIntent = new Intent(this,MusicService.class);
-        songNameIntent.putExtra("command","close");
-        PendingIntent songNamePendingIntent = PendingIntent.getService(this,5,closeIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-        remoteViews.setOnClickPendingIntent(R.id.song_title,songNamePendingIntent);*/
-
 
         builder.setCustomContentView(remoteViews);
 
@@ -104,15 +102,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         String command = intent.getStringExtra("command");
-        //String songTitle = intent.getStringExtra("song_title");
 
         switch (command){
+
             case "new_instance":
                 if(!mediaPlayer.isPlaying()) {
                     songs = (ArrayList<Song>) intent.getSerializableExtra(passSongList);
-
-                    //songTitle = songs.get(currentlyPlaying).getName();
-
                     try {
                         mediaPlayer.setDataSource(songs.get(currentlyPlaying).getLink());//.get(currentlyPlaying));
                         mediaPlayer.prepareAsync();
@@ -148,9 +143,6 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
                 break;
 
 
-
-
-
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -184,7 +176,12 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
 
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
+        remoteViews.setTextViewText(R.id.song_title,songs.get(currentlyPlaying).getName());
+        startForeground(NOTIF_ID,builder.build());
         mediaPlayer.start();
+
+
+
     }
 
     @Override

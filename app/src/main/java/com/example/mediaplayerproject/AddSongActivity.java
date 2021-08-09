@@ -279,7 +279,6 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
                 bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
                 Uri uri = getImageUri(getApplicationContext(),bitmap);
                 Glide.with(this).load(uri).fitCenter().into(songPicture);
-                //Glide.with(this).load(getArguments().getString(songPicToFragmentKey)).fitCenter().placeholder(rootView.getId()).into(songPicture);
                 //songPicture.setImageBitmap(bitmap);
                 songPicLink = uri.toString();
             }

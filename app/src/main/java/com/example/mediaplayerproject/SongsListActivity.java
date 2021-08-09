@@ -57,22 +57,6 @@ public class SongsListActivity extends AppCompatActivity implements DialogInterf
 
         fragmentManager = getSupportFragmentManager();
 
-       /* Intent musicServiceIntent = new Intent(this,MusicService.class);
-        isMy*/
-       /* songsList.add(song1);
-        songsList.add(song2);
-        songsList.add(song3);
-        //////////////////////////////////////////////////////////////////////////////////////////////
-        songsList.add(song1);
-        songsList.add(song2);
-        songsList.add(song3);
-        songsList.add(song1);
-        songsList.add(song2);
-        songsList.add(song3);
-        songsList.add(song1);
-        songsList.add(song2);
-        songsList.add(song3);
-        //////////////////////////////////////////////////////////////////////////////////////////////*/
         Intent intent = getIntent();
         songsList = (ArrayList<Song>) intent.getSerializableExtra(passSongList);
         //SongsAdapter songsAdapter = new SongsAdapter(songsList);
@@ -191,19 +175,11 @@ public class SongsListActivity extends AppCompatActivity implements DialogInterf
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-      /*  ItemTouchHelper.Callback callback = new MyItemTouchHelper(songsAdapter);
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-        songsAdapter.setTouchHelper(itemTouchHelper);
-        itemTouchHelper.attachToRecyclerView(recyclerView);*/
-
 
         recyclerView.setAdapter(songsAdapter);
-        //Log.d("Lifecycle: ", "SET ADAPTER RECYCLERVIEW");
 
-       /* Intent intent = new Intent(SongsListActivity.this,MusicService.class);
-        intent.putExtra("list",list);
-        intent.putExtra("command","new_instance");
-        startService(intent);*/
+
+
 
     }
 
@@ -240,11 +216,5 @@ public class SongsListActivity extends AppCompatActivity implements DialogInterf
 
     }
 
-   /* @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Log.d("Lifecycle: ", "SongsListActivity onBackPressed  ");
-        Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(mainActivityIntent);
-    }*/
+
 }
