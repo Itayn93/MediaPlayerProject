@@ -43,7 +43,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.reset();
 
-
+        //songs = (ArrayList<Song>) intent.getSerializableExtra(passSongList);
 
         NotificationManager manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 
@@ -57,6 +57,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,channelId);
 
         RemoteViews remoteViews = new RemoteViews(getPackageName(),R.layout.music_notif);
+
 
         Intent playIntent = new Intent(this,MusicService.class);
         playIntent.putExtra("command","play");
@@ -109,6 +110,7 @@ public class MusicService extends Service implements MediaPlayer.OnPreparedListe
             case "new_instance":
                 if(!mediaPlayer.isPlaying()) {
                     songs = (ArrayList<Song>) intent.getSerializableExtra(passSongList);
+
                     //songTitle = songs.get(currentlyPlaying).getName();
 
                     try {

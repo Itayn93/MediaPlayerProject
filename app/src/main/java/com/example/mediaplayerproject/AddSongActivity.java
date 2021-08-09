@@ -3,6 +3,7 @@ package com.example.mediaplayerproject;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -68,6 +69,8 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
 
     ImageView songPicture;
 
+   // ActivityResultLauncher<Void> cameraResultLauncher;
+   // ActivityResultLauncher<Uri> galleryResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +100,7 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
         Intent intent = getIntent();
         songsList = (ArrayList<Song>) intent.getSerializableExtra(passSongList);
 
+        //initLaunchers();
 
         addPictureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,25 +115,13 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
                                 Log.d("alert: ", "onclick, upload picture with camera");
                                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                             /*   ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
-                                        new ActivityResultContracts.StartActivityForResult(),
-                                        new ActivityResultCallback<ActivityResult>() {
-                                            @Override
-                                            public void onActivityResult(ActivityResult result) {
-                                                if (result.getResultCode() == Activity.RESULT_OK) {
-                                                    // There are no request codes
-                                                    Intent data = result.getData();
-                                                    bitmap = (Bitmap) data.getExtras().get("data");
-                                                }
-                                            }
-                                        });
-
-                                someActivityResultLauncher.launch(intent);*/
                                 Uri fileUri = Uri.fromFile(file);
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT,fileUri);
 
                                 /** this function is deprecated need to fix*/
                                 startActivityForResult(intent,1);
+                                //cameraResultLauncher.launch(null);
+
                             }
                         })
 
@@ -143,6 +135,7 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
                                 photoPickerIntent.setType("image/*");
                                 startActivityForResult(photoPickerIntent, 1);
 
+                                //galleryResultLauncher.launch();
                             }
                         })
 
@@ -157,8 +150,6 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
                     Song newSong = new Song(songName,songArtist,songLink,songPicLink);
 
                     songsList.add(newSong);
-                   /* Intent musicServiceIntent = new Intent(AddSongActivity.this,MusicService.class);
-                    musicServiceIntent.putExtra(passSongList,(Serializable)songsList);*/
 
                     try {
                         FileOutputStream fos = openFileOutput("songsList",MODE_PRIVATE);
@@ -178,11 +169,6 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
                     songsListIntent.putExtra(passSongList,(Serializable)songsList);
                     startActivity(songsListIntent);
 
-                    /*Intent musicServiceIntent = new Intent(AddSongActivity.this,MusicService.class);
-                    musicServiceIntent.putExtra(passSongList,(Serializable)songsList);
-                    musicServiceIntent.putExtra("command","new_instance");
-                    //intent.putExtra("song_title","new_instance");
-                    startService(musicServiceIntent);*/
                 }
                 else{
                     Toast.makeText(AddSongActivity.this, "Please fill all details", Toast.LENGTH_LONG).show();
@@ -194,6 +180,28 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
 
 
     }
+
+   /* private void initLaunchers(){
+        cameraResultLauncher = registerForActivityResult(new ActivityResultContracts.TakePicturePreview(), new ActivityResultCallback<Bitmap>() {
+            @Override
+            public void onActivityResult(Bitmap result) {
+                Uri uri = getImageUri(getApplicationContext(),result);
+                Glide.with(getApplicationContext()).load(uri).fitCenter().into(songPicture);
+                songPicLink = uri.toString();
+
+            }
+        });
+
+        galleryResultLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), new ActivityResultCallback<Uri>() {
+            @Override
+            public void onActivityResult(Uri result) {
+                //resultImageIv.setImageURI(result);
+                //pickPicture = result;
+            }
+        });
+
+    }*/
+
 
     @Override
     protected void onStart() {
@@ -307,7 +315,6 @@ public class AddSongActivity extends AppCompatActivity implements DialogInterfac
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
     }
-
 
     // default onClick for dialog - does nothing
     @Override
